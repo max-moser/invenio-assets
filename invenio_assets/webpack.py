@@ -12,17 +12,49 @@ import os
 from collections import OrderedDict
 
 from flask import current_app, request
-from flask_webpackext import WebpackBundle, WebpackBundleProject
+from flask_webpackext import WebpackBundle
+from flask_webpackext import WebpackBundleProject as WebpackBundleProjectBase
 from flask_webpackext.manifest import JinjaManifest, JinjaManifestLoader
+from invenio_base.utils import obj_or_import_string
 from markupsafe import Markup
 from pywebpack import ManifestEntry, UnsupportedExtensionError, bundles_from_entry_point
+from werkzeug.local import LocalProxy
 
-project = WebpackBundleProject(
+
+class WebpackBundleProject(WebpackBundleProjectBase):
+    """Flask webpack bundle project."""
+
+    def __init__(self, import_name, base_package_json="package.json", **kwargs):
+        """Constructor."""
+        super().__init__(import_name, **kwargs)
+        self._package_json_source_path = base_package_json
+
+    @property
+    def npmpkg(self):
+        """Get API to NPM package."""
+        npm_pkg_cls = obj_or_import_string(
+            current_app.config.get("ASSETS_NPM_PKG_CLS", "pynpm:NPMPackage")
+        )
+        return npm_pkg_cls(self.path)
+
+
+webpack_project = WebpackBundleProject(
     __name__,
     project_folder="assets",
     config_path="build/config.json",
     bundles=bundles_from_entry_point("invenio_assets.webpack"),
 )
+
+rspack_project = WebpackBundleProject(
+    __name__,
+    base_package_json="rspack-package.json",
+    project_folder="assets",
+    config_path="build/config.json",
+    bundles=bundles_from_entry_point("invenio_assets.webpack"),
+)
+
+# For backwards compatibility
+project = webpack_project
 
 
 class WebpackThemeBundle(object):
