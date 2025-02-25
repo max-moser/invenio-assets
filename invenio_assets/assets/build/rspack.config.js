@@ -70,12 +70,12 @@ var webpackConfig = {
   context: config.build.context,
   stats: {
     //preset: 'verbose',
-    // warnings: true,
-    // errors: true,
-    // errorsCount: true,
-    // errorStack: true,
-    // errorDetails: true,
-    // children: true,
+     warnings: true,
+     errors: true,
+     errorsCount: true,
+     errorStack: true,
+     errorDetails: true,
+     children: true,
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
@@ -117,13 +117,6 @@ var webpackConfig = {
         mangle: {
           safari10: true,
         },
-        // output: {
-        //   ecma: 5,
-        //   comments: false,
-        //   // Turned on because emoji and regex is not minified properly using default
-        //   // https://github.com/facebook/create-react-app/issues/2488
-        //   ascii_only: true,
-        // },
       }),
 
       // would be nice, but not workable at the moment, no idea why
@@ -174,8 +167,6 @@ var webpackConfig = {
               react: {
                 development: !prod,
                 useBuiltins: true,
-                // runtime: 'automatic',
-                // throwIfNamespace: true,
               },
             },
           },
@@ -232,14 +223,6 @@ var webpackConfig = {
   devtool:
     process.env.NODE_ENV === "production" ? "source-map" : "inline-source-map",
   plugins: [
-    // RSpack compat
-    // new ESLintPlugin({
-    //   emitWarning: true,
-    //   quiet: true,
-    //   formatter: require("eslint-friendly-formatter"),
-    //   eslintPath: require.resolve("eslint"),
-    // }),
-    // Pragmas
     new rspack.DefinePlugin({
       "process.env": process.env.NODE_ENV,
     }),
@@ -269,9 +252,6 @@ var webpackConfig = {
     }),
   ],
   performance: { hints: false },
-  // snapshot: {
-  //   managedPaths: [],
-  // },
   watchOptions: {
     followSymlinks: true,
   },
