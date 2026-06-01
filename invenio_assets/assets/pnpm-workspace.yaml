@@ -2,3 +2,4 @@
 # https://github.com/webpack/webpack/issues/5087#issuecomment-1589749984
 nodeLinker: hoisted
 shamefullyHoist: true
+strictDepBuilds: false
